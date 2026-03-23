@@ -1,5 +1,20 @@
 # Backend (Django)
 
+## Demo Screenshots
+
+Inserting Data into Tables
+![Adding Tables](Demo/Adding_Tables.png)
+
+User Tables
+![Users](Demo/Users.png)
+
+Library Tables
+![Library User1](Demo/Library_User1.png)
+
+Song Tables
+![Songs](Demo/Songs.png)
+
+
 ## How to run/install
 
 
