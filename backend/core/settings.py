@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -118,3 +119,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# Suno API Configuration
+SUNO_API_TOKEN = os.getenv('SUNO_API_TOKEN', 'your-suno-api-token-here')
+
+# Song Generator Strategy Configuration
+GENERATOR_STRATEGY = os.getenv('GENERATOR_STRATEGY', 'mock')  # Options: 'mock' or 'suno'

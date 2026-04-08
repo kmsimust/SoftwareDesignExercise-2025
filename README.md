@@ -36,14 +36,43 @@ python -m pip install ...
 ```
 
 
-### 5. migrate the sqlite3.
+### 5. Configure Environment Variables (Optional)
+Create a `.env` file in the backend directory or set environment variables:
+
+**Option 1: Using .env file (requires python-dotenv)**
+```bash
+pip install python-dotenv
+```
+Then create `.env` file:
+```bash
+# For Suno API integration
+SUNO_API_TOKEN=your_actual_suno_api_token_here
+
+# For strategy selection (default: 'mock')
+GENERATOR_STRATEGY=suno  # or 'mock'
+```
+
+**Option 2: Set environment variables directly**
+```bash
+# Windows PowerShell
+$env:SUNO_API_TOKEN="your_token_here"
+$env:GENERATOR_STRATEGY="suno"
+
+# Windows Command Prompt
+set SUNO_API_TOKEN=your_token_here
+set GENERATOR_STRATEGY=suno
+```
+
+**Note:** The frontend can override the default strategy by specifying `strategy` parameter in API requests.
+
+### 6. migrate the sqlite3.
 make tables for sqlite3.
 ```bash
 python manage.py migrate 
 ```
 
 
-### 6. run the testing server.
+### 7. run the testing server.
 make sure you're in the same directory as manage.py, in this case is backend.
 ```bash
 python manage.py runserver 

@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 
 from .models import Song
+from .strategies import get_song_generator_strategy
 
 
 @require_http_methods(["GET"])
@@ -113,6 +114,51 @@ def song_delete(request, pk):
     return JsonResponse({"message": f"Song '{song.title}' deleted successfully."}, status=200)
 
 
+@csrf_exempt
+@require_http_methods(["POST"])
+def song_generate(request, pk):
+    song = get_object_or_404(Song, pk=pk)
+
+    try:
+        body = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON body."}, status=400)
+
+    strategy_name = body.get("strategy")  # Optional: 'mock' or 'suno', uses default if not provided
+
+    try:
+        strategy = get_song_generator_strategy(strategy_name)
+    except ValueError as e:
+        return JsonResponse({"error": str(e)}, status=400)
+
+    try:
+        strategy.generate_song(song)
+        return JsonResponse({"message": "Song generation started.", "task_id": song.task_id}, status=200)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+
+
+@require_http_methods(["GET"])
+def song_generation_status(request, pk):
+    song = get_object_or_404(Song, pk=pk)
+
+    strategy_name = request.GET.get("strategy")  # Optional: 'mock' or 'suno', uses default if not provided
+
+    try:
+        strategy = get_song_generator_strategy(strategy_name)
+    except ValueError as e:
+        return JsonResponse({"error": str(e)}, status=400)
+
+    try:
+        strategy.check_status(song)
+        return JsonResponse({
+            "status": song.generation_status,
+            "audio_url": song.audio_url
+        }, status=200)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+
+
 def _serialize(song: Song) -> dict:
     return {
         "id":             song.pk,
@@ -123,4 +169,7 @@ def _serialize(song: Song) -> dict:
         "singer_voice":   song.singer_voice,
         "meaning":        song.meaning,
         "song_durations": str(song.song_durations),  # TimeField → "HH:MM:SS"
+        "task_id":        song.task_id,
+        "generation_status": song.generation_status,
+        "audio_url":      song.audio_url,
     }
