@@ -18,10 +18,4 @@ urlpatterns = [
  
     # Delete a song (DELETE)
     path("<int:pk>/delete/", views.song_delete, name="song-delete"),
-
-    # Generate song (POST) - body: {"strategy": "mock" or "suno"} (optional, uses default if not provided)
-    path("<int:pk>/generate/", views.song_generate, name="song-generate"),
-
-    # Check generation status (GET) - query: ?strategy=mock or suno (optional, uses default if not provided)
-    path("<int:pk>/status/", views.song_generation_status, name="song-status"),
 ]
