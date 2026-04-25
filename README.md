@@ -107,5 +107,11 @@ generate_song
 watch_song
 ![Songs](Demo/watch_song.png)
 
+using_token
+![Songs](Demo/using_token.png)
+
+pending
+![Songs](Demo/pending.png)
+
 
 $${\color{white}End}$$

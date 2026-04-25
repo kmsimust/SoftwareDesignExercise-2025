@@ -140,6 +140,44 @@ def song_delete(request, pk):
     return JsonResponse({"message": f"Song '{song.title}' deleted successfully."}, status=200)
 
 
+@csrf_exempt
+@require_http_methods(["POST"])
+def song_callback(request):
+    """Callback endpoint to receive Suno generation webhook events."""
+    try:
+        body = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON body."}, status=400)
+
+    task_id = body.get("taskId") or body.get("task_id") or body.get("data", {}).get("taskId")
+    if not task_id:
+        return JsonResponse({"error": "Missing taskId in callback payload."}, status=400)
+
+    try:
+        song = Song.objects.get(task_id=task_id)
+    except Song.DoesNotExist:
+        return JsonResponse({"error": "Song not found for provided taskId."}, status=404)
+
+    status = body.get("status") or body.get("data", {}).get("status")
+    if status:
+        song.generation_status = status.upper()
+
+    audio_url = (
+        body.get("audio_url")
+        or body.get("data", {}).get("audio_url")
+        or body.get("data", {}).get("outputUrl")
+    )
+    if audio_url:
+        song.audio_url = audio_url
+
+    # If the callback indicates success, ensure the song path is set.
+    if song.generation_status == "SUCCESS" and not song.song_path:
+        song.song_path = f"storage/song/{song.id}"
+
+    song.save()
+    return JsonResponse({"status": "callback received"}, status=200)
+
+
 def _serialize(song: Song) -> dict:
     return {
         "id":                 song.pk,

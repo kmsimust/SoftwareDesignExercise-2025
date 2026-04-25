@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 
 # Load environment variables from .env file
 env_path = Path(__file__).resolve().parent.parent / '.env'
-load_dotenv(env_path)
+load_dotenv(env_path, override=True)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -137,6 +137,7 @@ CORS_ALLOWED_ORIGINS = [
 
 # Song Generation Configuration
 SUNO_API_TOKEN = os.getenv('SUNO_API_TOKEN', '')
+SUNO_CALLBACK_URL = os.getenv('SUNO_CALLBACK_URL', 'http://localhost:8000/song/callback/')
 GENERATOR_STRATEGY = os.getenv('GENERATOR_STRATEGY', 'mock')
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

@@ -1,4 +1,5 @@
 .venv
+.env
 backend/db.sqlite3
 __pycache__/
 storage/song/*

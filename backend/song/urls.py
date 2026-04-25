@@ -12,6 +12,9 @@ urlpatterns = [
  
     # Create a new song (POST)
     path("create/", views.song_create, name="song-create"),
+
+    # Song generation callback endpoint for Suno
+    path("callback/", views.song_callback, name="song-callback"),
  
     # Full update (PUT) or partial update (PATCH)
     path("<int:pk>/update/", views.song_update, name="song-update"),

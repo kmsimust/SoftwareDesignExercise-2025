@@ -173,9 +173,21 @@ class SunoSongGeneratorStrategy(SongGeneratorStrategy):
 
         # Prepare the payload based on song fields
         payload = {
+            "customMode": True,
+            "instrumental": True,
+            "model": "V4_5ALL",
+            "callBackUrl": settings.SUNO_CALLBACK_URL,
             "prompt": f"Create a song titled '{song.title}' for {song.occasion} with {song.mood_tone} mood in {song.genre} genre. Singer voice: {song.singer_voice}. Meaning: {song.meaning}",
+            "style": "Classical",
+            "title": "Peaceful Piano Meditation",
+            "personaId": "persona_123",
+            "personaModel": "style_persona",
+            "negativeTags": "",
+            "vocalGender": "m",
+            "styleWeight": 0.65,
+            "weirdnessConstraint": 0.65,
+            "audioWeight": 0.65,
             "duration": str(song.song_durations),  # Assuming it's in HH:MM:SS format, but API might expect seconds
-            # Add other required fields as per API docs
         }
 
         response = requests.post(self.GENERATE_ENDPOINT, headers=headers, json=payload)
